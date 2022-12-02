@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity noisegen is
   port (clk, reset: 	in 	std_logic;
@@ -7,7 +8,7 @@ entity noisegen is
 end noisegen;
 
 architecture noisegenbeh of noisegen is
-  signal currstate1, nextstate1, currstate2, nextstate2, currstate3, nextstate3: 	std_logic_vector (5 DOWNTO 0);
+  signal currstate1, nextstate1, currstate2, nextstate2, currstate3, nextstate3: 	std_logic_vector (5 downto 0);
   signal feedback1, feedback2, feedback3: 		std_logic;
 begin
 
@@ -17,7 +18,7 @@ begin
       		currstate1 <= (0 => '1', others =>'0');
       		currstate2 <= (0 => '1', others =>'0');
 		currstate3 <= (0 => '1', others =>'0');
-    	elsif (Clk = '1' and clk'event) then
+    	elsif (rising_edge(clk)) then
       		currstate1 <= nextstate1;
       		currstate2 <= nextstate2;
       		currstate3 <= nextstate3;
