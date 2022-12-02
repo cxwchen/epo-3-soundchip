@@ -30,7 +30,7 @@ begin
         end if;
     end process;
 
-    process(fsm_state, count, ready)
+    process(fsm_state, count, ready, Din)
     begin            
         case fsm_state is
             when idle =>
