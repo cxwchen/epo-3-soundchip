@@ -24,16 +24,11 @@ architecture structural of register is
     signal q_stat, q_data1, q_data2     : unsigned (7 downto 0);
 
 begin
-
-    q(7 downto 0)   => q_stat;
-    q(15 downto 8)  => q_data1;
-    q(23 downto 16) => q_data2;
-
     reg_status: byte_register
         port map(
             clk     => clk,
             d       => d,
-            q       => q_stat,
+            q       => q(7 downto 0),
             ready   => ready(0)
         );
 
@@ -41,7 +36,7 @@ begin
         port map(
             clk     => clk,
             d       => d,
-            q       => q_data1,
+            q       => q(15 downto 8),
             ready   => ready(1)
         );
     
@@ -49,9 +44,8 @@ begin
         port map(
             clk     => clk,
             d       => d,
-            q       => q_data2,
+            q       => q(23 downto 16),
             ready   => ready(2)
         );
-    
-    
+
 end architecture structural;
