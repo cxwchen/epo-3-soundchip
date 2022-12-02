@@ -8,7 +8,7 @@ entity noisegen is
 end noisegen;
 
 architecture noisegenbeh of noisegen is
-  signal currstate1, nextstate1, currstate2, nextstate2, currstate3, nextstate3: 	std_logic_vector (5 downto 0);
+  signal currstate1, nextstate1, currstate2, nextstate2, currstate3, nextstate3: 	std_logic_vector (5 DOWNTO 0);
   signal feedback1, feedback2, feedback3: 		std_logic;
 begin
 
