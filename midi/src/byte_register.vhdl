@@ -4,9 +4,9 @@ use IEEE.numeric_std.all;
 
 entity byte_register is
     port (
-        clk, d, enable, clear       : in std_logic;
-        q                           : out std_logic_vector(7 downto 0);
-        ready                       : out std_logic;
+        clk, d, enable, shift, clear        : in std_logic;
+        q                                   : out std_logic_vector(7 downto 0);
+        ready                               : out std_logic;
         );
 end entity byte_register;
 
@@ -30,10 +30,10 @@ begin
         end if ;
     end process ; -- insert
 
-    -- Shift register asynchronously everytime enable turns high to make room for new data
-    shift : process( enable, d )
+    -- Shift register asynchronously everytime enable turns low to make room for next data bit
+    shift : process( enable )
     begin
-        if enable = '1' then
+        if enable = '0' then
             shift_right(unsigned(q), 1)
         end if ;
     end process ; -- shift
