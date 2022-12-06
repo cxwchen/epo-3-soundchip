@@ -7,7 +7,7 @@ entity fsm is
         clk, reset  : in std_logic;
         count       : in std_logic_vector(9 downto 0);
         ready       : in std_logic;
-        Din         : in std_logic;
+        din         : in std_logic;
         count_reset : out std_logic;
         enable      : out std_logic
     );
@@ -36,10 +36,10 @@ begin
             when idle =>
                 enable <= '0';
                 count_reset <= '0';
-                if (Din = '1') then
+                if (din = '1') then
                     new_fsm_state <= idle;
 
-                elsif (Din = '0') then
+                elsif (din = '0') then
                     new_fsm_state <= start;
                 end if;
 
