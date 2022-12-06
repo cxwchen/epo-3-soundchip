@@ -5,7 +5,7 @@ use IEEE.numeric_std.all;
 entity distributor is
     port (
         clk, reset          : in std_logic;
-        SD_in               : in std_logic_vector(23 downto 0);
+        SD_in               : in std_logic_vector(23 downto 0); --- input received from the register (connected to q)
         pitch_TG0           : out std_logic_vector(6 downto 0);
         pitch_TG1           : out std_logic_vector(6 downto 0);
         pitch_TG2           : out std_logic_vector(6 downto 0);
@@ -18,42 +18,33 @@ entity distributor is
 end entity distributor;
 
 architecture behavioural of distributor is
-    type distributor_state_type is (reset_state, note_off_state, note_on_state);
-    signal distributor_state, new_distributor_state : distributor_state_type;
-
+begin
+    process(SD_in, clk)
     begin
-        process(clk, reset)
-        begin
-            if rising_edge(clk) then
-                if (reset='1') then
-                    distributor_state <= reset_state;
-
-                else
-                    distributor_state <= new_distributor_state;
-                end if;
+        if (SD_in(6 downto 4) = "000") or (SD_in(6 downto 4) = "001") then --- note off or note on message
+            if (unsigned(SD_in(15 downto 8)) <= to_unsigned(.....)) and (unsigned(SD_in(15 downto 8)) >= to_unsigned(....)) then --- low: if the pitch is between a certain range (has not been decided yet) the tone generator responsible for that pitch needs to receive the note number (data byte 1) and the corresponding output module needs to receive the velocity (data byte 2)
+                pitch_TG0 <= SD_in(15 downto 8);
+                velo0 <= SD_in(23 downto 16);
+            elsif (unsigned(SD_in(15 downto 8)) <= to_unsigned(.....)) and (unsigned(SD_in(15 downto 8)) >= to_unsigned(.....)) then --- mid: different range, see above for an explanation
+                pitch_TG1 <= SD_in(15 downto 8);
+                velo1 <= SD_in(23 downto 16);
+            elsif (unsigned(SD_in(15 downto 8)) <= to_unsigned(....)) and (unsigned(SD_in(15 downto 9)) >= to_unsigned(....)) then --- high: different range, see above for an explanation
+                pitch_TG2 <= SD_in(15 downto 8);
+                velo2 <= SD_in(23 downto 16);
+            else -- the note number is outside of the ranges described above so it will be considered noise
+                --- hier weet ik niet precies wat ik moet doen voor de tone generator, want het note_on signaal wordt gebruikt
+                velo3 <= SD_in(23 downto 16);
             end if;
-        end process;
-
-        process(distributor_state, SD_in, clk)
-        begin
-            case distributor_state is
-                when reset_state =>
-                    pitch_TG0 <= (others=>'0');
-                    pitch_TG1 <= (others=>'0');
-                    pitch_TG2 <= (others=>'0');
-                    note_on <= (others => '0');
-                    velo0 <= (others => '0');
-                    velo1 <= (others => '0');
-                    velo2 <= (others => '0');
-                    velo3 <= (others => '0');
-                    if (SD_in(6 downto 4) = "000") then
-                        new_distributor_state <= note_off_state;
-                    elsif (SD_in(6 downto 4) = "001") then
-                        new_distributor_state <= note_on_state;
-                    else
-                        new_distributor_state <= reset_state;
-                    end if;
-                when note_on_state =>
-                    --- hier moet een bepaalde pitch range naar een bepaalde tone generator, die verdeling moet nog gemaakt worden
-                    -- aan de hand van welke range van keys naar welke tone generator moet, weten we ook welke output module daarvoor gebruikt moet worden
+        else --- a status message we don't make use of
+            pitch_TG0 <= (others=>'0');
+            pitch_TG1 <= (others=>'0');
+            pitch_TG2 <= (others=>'0');
+            note_on <= (others=>'0');
+            velo0 <= (others=>'0');
+            velo1 <= (others=>'0');
+            velo2 <= (others=>'0');
+            velo3 <= (others=>'0');
+        end if;
+    end process;
+end architecture behavioural;
 
