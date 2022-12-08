@@ -1,0 +1,61 @@
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+entity pwm_clk is
+  port(clk, reset : in  std_logic;
+       pwm_clk_out : out std_logic);
+end pwm_clk;
+
+-- This entity generates the pwm_clock at a different frequency, such that it can be used as period for
+-- the pwm signal. f_pwm = 189 kHz and f_clk = 25 MHz -> Count up until 25M/189k = 133 (in decimal). 133/2 is half period.
+-- This entity's output gets inputted to the pwm_clk_out_cnt, namely to make the pwm_output output with
+-- the correct frequency.
+-- 1 period = fclk/fpwm = 25MHz/189kHz = 133 counts needed. Count up until half of period = 133/2 =
+-- 66. To reduce 1 bit in order to reduce size needed take 64 bits. So count up until 64.
+
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+use IEEE.numeric_std.ALL;
+
+architecture behaviour of pwm_clk is
+
+  signal counter : std_logic_vector(7 downto 0);
+
+begin
+
+  process (clk, reset)
+  begin
+
+    if (reset = '0') then
+-- This code under counts every hign AND low clock edge. 
+-- Therefore we count to twice 133, so get the smae frequency around ~193kHz.
+      counter <= std_logic_vector(unsigned(counter) + to_unsigned(1, 8));
+
+      if (clk'event and clk = '1') then
+
+        if (to_integer(unsigned(counter)) < 128) then
+          
+          pwm_clk_out <= '1';
+
+        else
+          
+          pwm_clk_out <= '0';
+
+        end if;
+
+      else	
+        
+        null;
+
+      end if;
+
+    else 
+
+      pwm_clk_out <= '0';
+      counter <= "00000000";
+
+    end if;
+  end process;	
+
+end behaviour;
+

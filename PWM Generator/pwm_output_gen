@@ -1,0 +1,46 @@
+-- TODO: take the input of pwm_internal_counter and pwm_internal_clock_gen and
+-- put that in a FSM such that it output according to the input.
+
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+entity pwm_output is
+  port(clk, reset : in  std_logic;
+       pwm_clk_cnt : in std_logic_vector(14 downto 0);
+       duty_calc_cnt : in std_logic_vector(14 downto 0);
+       pwm_out : out std_logic);
+end pwm_output;
+
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+use IEEE.numeric_std.ALL;
+
+architecture behaviour of pwm_output is
+
+begin
+
+  process(clk)
+  begin
+
+    if(reset = '0') then
+      if(clk'event and clk = '1') then
+
+        if(pwm_clk_cnt < duty_calc_cnt) then
+          
+          pwm_out <= '1';
+
+        else 
+
+          pwm_out <= '0';
+
+        end if;
+
+      end if;
+    else
+
+      pwm_out <= '0';
+
+    end if;
+
+  end process;
+end behaviour;
