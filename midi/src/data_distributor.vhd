@@ -30,14 +30,14 @@ begin
                 velo3 <= sd_in(23 downto 16);
             end if;
         else --- a status message we ignore 
-            pitch_tg0 <= (others=>'0');
-            pitch_tg1 <= (others=>'0');
-            pitch_tg2 <= (others=>'0');
-            note_on <= (others=>'0');
-            velo0 <= (others=>'0');
-            velo1 <= (others=>'0');
-            velo2 <= (others=>'0');
-            velo3 <= (others=>'0');
+            pitch_tg0   <= (others=>'0');
+            pitch_tg1   <= (others=>'0');
+            pitch_tg2   <= (others=>'0');
+            note_on     <= (others=>'0');
+            velo0       <= (others=>'0');
+            velo1       <= (others=>'0');
+            velo2       <= (others=>'0');
+            velo3       <= (others=>'0');
         end if;
     end process;
 end architecture behavioural;

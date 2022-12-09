@@ -12,6 +12,8 @@ end entity byte_register;
 
 architecture structural of byte_register is
 
+    signal new_ready    : std_logic;
+
 begin
     -- Initialise Q with ones instead of zeroes
     q <= x"FF";
@@ -26,7 +28,9 @@ begin
                 end if ;
             end if ;
         else
-            q <= x"FF";
+            q           <= x"FF";
+            new_ready   <= 0;
+            ready       <= 0;
         end if ;
     end process ; -- insert
 
@@ -42,9 +46,9 @@ begin
     readying : process( q )
     begin
         if q(7) = '0' then
-            ready <= '1';
+            new_ready <= '1';
         else
-            ready <= '0';
+            ready <= new_ready;
         end if ;
     end process ; -- ready
     
