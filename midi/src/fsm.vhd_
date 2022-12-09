@@ -7,14 +7,14 @@ entity fsm is
         clk, reset  : in std_logic;
         count       : in std_logic_vector(9 downto 0);
         ready       : in std_logic;
-        din         : in std_logic;
+        Din         : in std_logic;
         count_reset : out std_logic;
         enable      : out std_logic
     );
 end entity fsm;
 
 architecture behavioural of fsm is
-    type fsm_state_type is (idle, start, read_state, write_state, final_read, final_write);
+    type fsm_state_type is (idle, start, read, write, final_read, final_write);
     signal fsm_state, new_fsm_state : fsm_state_type;
 
 begin
@@ -36,10 +36,10 @@ begin
             when idle =>
                 enable <= '0';
                 count_reset <= '0';
-                if (din = '1') then
+                if (Din = '1') then
                     new_fsm_state <= idle;
 
-                elsif (din = '0') then
+                if (Din = '0') then
                     new_fsm_state <= start;
                 end if;
 
@@ -47,25 +47,25 @@ begin
                 enable <= '0';
                 count_reset <= '0';
                 if (unsigned(count)>=to_unsigned(400,10)) then
-                    new_fsm_state <= read_state;
+                    new_fsm_state <= read;
                 else
                     new_fsm_state <= start;
                 end if;
 
-            when read_state =>   
+            when read =>   
                 enable <= '0';
                 count_reset <= '1';
                 if (unsigned(count)>=(to_unsigned(800, 10))) then
-                    new_fsm_state <= write_state;
+                    new_fsm_state <= write;
                 end if;
 
-            when write_state =>
+            when write =>
                 enable <= '1';
                 count_reset <= '1';
                 if (ready = '1') then
                     new_fsm_state <= final_read;
                 else 
-                    new_fsm_state <= read_state;
+                    new_fsm_state <= read;
                 end if;
 
             when final_read =>

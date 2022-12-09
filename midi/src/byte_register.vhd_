@@ -34,7 +34,7 @@ begin
     shifting : process( enable )
     begin
         if enable = '0' then
-            q <= std_logic_vector(shift_right(unsigned(q), 1));
+            q <= shift_right(unsigned(q), 1);
         end if ;
     end process ; -- shift
 

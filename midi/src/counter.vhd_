@@ -17,7 +17,6 @@ architecture structural of counter is
 begin
 
     timebase : process(clk)
-	begin
         if rising_edge(clk) then
             if reset = '1' then
                 count <= (others => '0');
