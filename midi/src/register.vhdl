@@ -1,23 +1,23 @@
-library library IEEE;
+library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity register is
+entity reg is
     port (
         clk, d, enable, clear           : in std_logic;
         q                               : out std_logic_vector(23 downto 0);
-        ready                           : out std_logic_vector(2 downto 0);
+        ready                           : out std_logic_vector(2 downto 0)
     );
 
-end entity register;
+end entity reg;
 
-architecture structural of register is
+architecture structural of reg is
     
     component byte_register is
         port (
             clk, d, enable, clear       : in std_logic;
             q                           : out std_logic_vector(7 downto 0);
-            ready                       : out std_logic;
+            ready                       : out std_logic
         );
     end component byte_register;
 
