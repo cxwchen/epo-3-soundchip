@@ -4,9 +4,10 @@ use IEEE.numeric_std.all;
 
 entity reg is
     port (
-        clk, d, enable, clear           : in std_logic;
-        q                               : out std_logic_vector(23 downto 0);
-        ready                           : out std_logic_vector(2 downto 0)
+        clk, d, clear           : in std_logic;
+        enable                  : in std_logic_vector(2 downto 0);
+        q                       : out std_logic_vector(23 downto 0);
+        ready                   : out std_logic_vector(2 downto 0)
     );
 
 end entity reg;
@@ -22,20 +23,12 @@ architecture structural of reg is
     end component byte_register;
 
     signal q_stat, q_data1, q_data2     : unsigned (7 downto 0);
-    signal en_s, en_d1, en_d2           : std_logic; -- Routed ENABLE signal for individual registers
 
 begin
-
-    -- Multiplexer-ish implementation. Basically routes the ENABLE signal to the correct shift-register based on which register has READY = 1.
-    -- READY signal theoretically should never equal "010" but the possibility is accounted for just in case.
-    en_s    <= enable and not ( ready(0) or ready(1) or ready(2) );     -- READY = "000"
-    en_d1   <= enable and ready(0) and not ( ready(1) or ready(2) );    -- READY = "100"
-    en_d2   <= enable and ready(1) and not ready(2);                    -- READY = "010 or 110"
-
     -- Status Byte Register
     reg_status: byte_register
         port map(
-            enable  => en_s,
+            enable  => enable(0),
             clear   => clear,
             clk     => clk,
             d       => d,
@@ -46,7 +39,7 @@ begin
     -- First Data Byte Register
     reg_data1: byte_register
         port map(
-            enable  => en_d1,
+            enable  => enable(1),
             clear   => clear,
             clk     => clk,
             d       => d,
@@ -57,7 +50,7 @@ begin
     -- Second Data Byte Register
     reg_data2:  byte_register
         port map(
-            enable  => en_d2,
+            enable  => enable(2),
             clear   => clear,
             clk     => clk,
             d       => d,
