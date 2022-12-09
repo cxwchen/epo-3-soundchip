@@ -15,7 +15,7 @@ begin
     process(clk)
     begin
         if rising_edge(clk) then
-            q <= d;
+            d <= q;
         end if;
     end process;
     

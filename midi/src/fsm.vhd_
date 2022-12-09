@@ -38,7 +38,8 @@ begin
                 count_reset <= '0';
                 if (Din = '1') then
                     new_fsm_state <= idle;
-                elsif (Din = '0') then
+
+                if (Din = '0') then
                     new_fsm_state <= start;
                 end if;
 
