@@ -19,11 +19,11 @@ end component;
 component var_shift is
    port(Sel_Out   : in  std_logic_vector(7 downto 0);
         vel       : in  std_logic_vector(6 downto 0);
-        Shift_Out : out std_logic_vector(6 downto 0));
+        Shift_Out : out std_logic_vector(7 downto 0));
 end component;
 
 signal A1_Out, Sel_Out : std_logic_vector(7 downto 0);
-signal Shift_Out : std_logic_vector(6 downto 0);
+signal Shift_Out : std_logic_vector(7 downto 0);
 
 begin
 

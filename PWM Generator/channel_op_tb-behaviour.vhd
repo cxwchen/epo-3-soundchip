@@ -5,19 +5,19 @@ architecture behaviour of channel_op_tb is
    component channel_op
       port(amp    : in  std_logic_vector(5 downto 0);
            vel    : in  std_logic_vector(6 downto 0);
-           CH_Out : out std_logic_vector(6 downto 0));
+           CH_Out : out std_logic_vector(7 downto 0));
    end component;
    signal amp    : std_logic_vector(5 downto 0);
    signal vel    : std_logic_vector(6 downto 0);
-   signal CH_Out : std_logic_vector(6 downto 0);
+   signal CH_Out : std_logic_vector(7 downto 0);
 begin
    test: channel_op port map (amp, vel, CH_Out);
-   amp(0) <= '0' after 0 ns;
+   amp(0) <= '1' after 0 ns;
    amp(1) <= '1' after 0 ns;
    amp(2) <= '0' after 0 ns;
    amp(3) <= '1' after 0 ns;
-   amp(4) <= '1' after 0 ns;
-   amp(5) <= '0' after 0 ns;
+   amp(4) <= '0' after 0 ns;
+   amp(5) <= '1' after 0 ns;
    
 	vel(0) <= '0' after 0 ns,
 		'1' after 1600 ns,
