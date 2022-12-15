@@ -123,7 +123,7 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (ready(2) = '1') then
+                if (ready(1) = '1') then
                     new_fsm_state <= idle;
                 else 
                     new_fsm_state <= read_data_1;
@@ -148,7 +148,7 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (ready(2) = '1') then
+                if (ready(0) = '1') then
                     new_fsm_state <= idle;
                 else 
                     new_fsm_state <= read_write_2;
