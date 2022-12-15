@@ -6,15 +6,16 @@ entity fsm is
     port (
         clk, reset  : in std_logic;
         count       : in std_logic_vector(9 downto 0);
-        ready       : in std_logic;
+        ready       : in std_logic_vector(2 downto 0);
         Din         : in std_logic;
         count_reset : out std_logic;
+        reg_reset   : out std_logic;
         enable      : out std_logic
     );
 end entity fsm;
 
 architecture behavioural of fsm is
-    type fsm_state_type is (idle, start, read, write, final_read, final_write);
+    type fsm_state_type is (rest, idle, init, start, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
     signal fsm_state, new_fsm_state : fsm_state_type;
 
 begin
@@ -23,7 +24,7 @@ begin
     begin
         if rising_edge(clk) then
             if (reset = '1') then
-                fsm_state <= idle;
+                fsm_state <= rest;
             else 
                 fsm_state <= new_fsm_state;
             end if;
@@ -33,51 +34,125 @@ begin
     process(fsm_state, count, ready, Din)
     begin            
         case fsm_state is
+            -- Rest state resets the whole register, is only ever active for one tick.
+            when rest =>    
+                enable          <= '0';
+                count_reset     <= '1';
+                reg_reset       <= '1';
+
+                new_fsm_state   <= idle;
+            -- Idle waits for input D_in to go to 0, then moves to init.    
             when idle =>
-                enable <= '0';
-                count_reset <= '0';
+                enable          <= '0';
+                count_reset     <= '1';
+                reg_reset       <= '0';
+
                 if (Din = '1') then
                     new_fsm_state <= idle;
                 elsif (Din = '0') then
-                    new_fsm_state <= start;
+                    new_fsm_state <= init;
                 end if;
+            -- Init is only ever active for one tick, stores the first 0 bit into the register.
+            when init =>
+                enable          <= '1';
+                count_reset     <= '1';
+                reg_reset       <= '0';
 
+                new_fsm_state   <= start;
+        
+            -- Start counts to 400 to offset the data sampling by half a period (T = 800), next state is based off of which registers are ready.
             when start =>
-                enable <= '0';
-                count_reset <= '0';
+                enable          <= '0';
+                count_reset     <= '0';
+                reg_reset       <= '0';
                 if (unsigned(count)>=to_unsigned(400,10)) then
-                    new_fsm_state <= read;
+                    case ready is
+                        when "000"  =>
+                            new_fsm_state   <= read_status;
+                        when "001"  =>
+                            new_fsm_state   <= read_data_1;
+                        when "011"  =>
+                            new_fsm_state   <= read_data_2;
+                        when others =>
+                            new_fsm_state   <= start;
                 else
                     new_fsm_state <= start;
                 end if;
 
-            when read =>   
-                enable <= '0';
-                count_reset <= '1';
-                if (unsigned(count)>=(to_unsigned(800, 10))) then
-                    new_fsm_state <= write;
-                end if;
+            -- Read_Status is part of a Read/Write loop that should occur 8 times total.
+            when read_status =>   
+                enable          <= '0';
+                count_reset     <= '0';
+                reg_reset       <= '0';
 
-            when write =>
-                enable <= '1';
-                count_reset <= '1';
-                if (ready = '1') then
-                    new_fsm_state <= final_read;
-                else 
-                    new_fsm_state <= read;
-                end if;
-
-            when final_read =>
-                enable <= '0';
-                count_reset <= '1';
                 if (unsigned(count)>=(to_unsigned(800, 10))) then
-                    new_fsm_state <= final_write;
+                    new_fsm_state <= write_status;
+                else
+                    new_fsm_state <= read_status;
                 end if;
             
-            when final_write =>
-                enable <= '1';
-                count_reset <= '1';
-                new_fsm_state <= idle;                
+            -- Write_Status is part of a Read/Write loop, it loads a bit into the register for one tick. 
+            -- If the dedicated register states it is "ready", write_status leads back to Idle.
+            when write_status =>
+                enable          <= '1';
+                count_reset     <= '1';
+                reg_reset       <= '0';
+
+                if (ready(2) = '1') then
+                    new_fsm_state <= idle;
+                else 
+                    new_fsm_state <= read_status;
+                end if;
+
+            -- Read_Data_1 is part of a Read/Write loop that should occur 8 times total.
+            when read_data_1 =>   
+                enable          <= '0';
+                count_reset     <= '0';
+                reg_reset       <= '0';
+
+                if (unsigned(count)>=(to_unsigned(800, 10))) then
+                    new_fsm_state <= write_data_1;
+                else
+                    new_fsm_state <= read_data_1;
+                end if;
+            
+            -- Write_Data_1 is part of a Read/Write loop, it loads a bit into the register for one tick. 
+            -- If the dedicated register states it is "ready", write_status leads back to Idle.
+            when write_data_1 =>
+                enable          <= '1';
+                count_reset     <= '1';
+                reg_reset       <= '0';
+
+                if (ready(2) = '1') then
+                    new_fsm_state <= idle;
+                else 
+                    new_fsm_state <= read_data_1;
+                end if;
+
+            -- Read_Data_2 is part of a Read/Write loop that should occur 8 times total.
+            when read_data_2 =>   
+                enable          <= '0';
+                count_reset     <= '0';
+                reg_reset       <= '0';
+
+                if (unsigned(count)>=(to_unsigned(800, 10))) then
+                    new_fsm_state <= write_data_2;
+                else
+                    new_fsm_state <= read_data_2;
+                end if;
+        
+            -- Write_Data_2 is part of a Read/Write loop, it loads a bit into the register for one tick. 
+            -- If the dedicated register states it is "ready", write_status leads back to Idle.
+            when write_data_2 =>
+                enable          <= '1';
+                count_reset     <= '1';
+                reg_reset       <= '0';
+
+                if (ready(2) = '1') then
+                    new_fsm_state <= idle;
+                else 
+                    new_fsm_state <= read_write_2;
+                end if;              
         end case;
     end process;
 end architecture behavioural;

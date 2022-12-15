@@ -12,7 +12,7 @@ entity fsm is
         enable      : out std_logic
     );
 end entity fsm;
-
+YeS!
 architecture behavioural of fsm is
     type fsm_state_type is (idle, start, read, write, final_read, final_write);
     signal fsm_state, new_fsm_state : fsm_state_type;
