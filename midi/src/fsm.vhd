@@ -47,7 +47,7 @@ begin
                 if (Din = '1') then
                     new_fsm_state <= idle;
                 elsif (Din = '0') then
-                    new_fsm_state <= init;
+                    new_fsm_state <= offset;
                 end if;
             
             -- Offset counts to 400 (ticks) to offset the data sampling by half a period (T = 800 ticks).
@@ -76,7 +76,8 @@ begin
                             new_fsm_state   <= init_data;
                         else -- Ignore data byte if there is no status set
                             new_fsm_state   <= rest;
-                    end if;
+                    	end if;
+		    end if;
                 else
                     new_fsm_state   <= start;
                 end if;
@@ -107,7 +108,7 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (ready(2) = '1') then
+                if (ready(0) = '1') then
                     new_fsm_state <= idle;
                 else 
                     new_fsm_state <= read_status;
@@ -115,9 +116,9 @@ begin
 
             -- Init_Data resets the counter, then continues to either R_D_1 or R_D_2 based on the ready state(s) of the register.
             when init_data =>
-                enable          <= 0;
-                count_reset     <= 1;
-                reg_reset       <= 0;
+                enable          <= '0';
+                count_reset     <= '1';
+                reg_reset       <= '0';
 
                 if (ready = "001") then
                     new_fsm_state   <= read_data_1;
@@ -171,10 +172,10 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (ready(0) = '1') then
+                if (ready(2) = '1') then
                     new_fsm_state <= idle;
                 else 
-                    new_fsm_state <= read_write_2;
+                    new_fsm_state <= read_data_2;
                 end if;              
         end case;
     end process;
