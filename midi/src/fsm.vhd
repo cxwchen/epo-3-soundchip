@@ -7,7 +7,8 @@ entity fsm is
         clk, reset, Din                 : in std_logic;
         count                           : in std_logic_vector(9 downto 0);
         ready                           : in std_logic_vector(2 downto 0);
-        count_reset, reg_reset, enable  : out std_logic
+        count_reset, reg_reset          : out std_logic;
+        enable                          : out std_logic_vector(2 downto 0);
     );
 end entity fsm;
 
@@ -33,14 +34,14 @@ begin
         case fsm_state is
             -- Rest state resets the whole register, is only ever active for one tick.
             when rest =>    
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '1';
                 reg_reset       <= '1';
 
                 new_fsm_state   <= idle;
             -- Idle waits for input D_in to go to 0, then moves to offset.    
             when idle =>
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
@@ -52,7 +53,7 @@ begin
             
             -- Offset counts to 400 (ticks) to offset the data sampling by half a period (T = 800 ticks).
             when offset =>
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '0';
                 reg_reset       <= '0';
 
@@ -64,7 +65,7 @@ begin
 
             -- Start counts to 800, next state is based off of which registers are ready.
             when start =>
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '0';
                 reg_reset       <= '0';
 
@@ -83,7 +84,7 @@ begin
                 end if;
             
             when init_status =>
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '1';
                 reg_reset       <= '1';
 
@@ -91,7 +92,7 @@ begin
             
             -- Read_Status is part of a Read/Write loop that should occur 8 times total.
             when read_status =>   
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '0';
                 reg_reset       <= '0';
 
@@ -104,7 +105,7 @@ begin
             -- Write_Status is part of a Read/Write loop, it loads a bit into the register for one tick. 
             -- If the dedicated register states it is "ready", write_status leads back to Idle.
             when write_status =>
-                enable          <= '1';
+                enable          <= "001";
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
@@ -116,7 +117,7 @@ begin
 
             -- Init_Data resets the counter, then continues to either R_D_1 or R_D_2 based on the ready state(s) of the register.
             when init_data =>
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
@@ -130,7 +131,7 @@ begin
 
             -- Read_Data_1 is part of a Read/Write loop that should occur 8 times total.
             when read_data_1 =>   
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '0';
                 reg_reset       <= '0';
 
@@ -143,7 +144,7 @@ begin
             -- Write_Data_1 is part of a Read/Write loop, it loads a bit into the register for one tick. 
             -- If the dedicated register states it is "ready", write_status leads back to Idle.
             when write_data_1 =>
-                enable          <= '1';
+                enable          <= "010";
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
@@ -155,7 +156,7 @@ begin
 
             -- Read_Data_2 is part of a Read/Write loop that should occur 8 times total.
             when read_data_2 =>   
-                enable          <= '0';
+                enable          <= "000";
                 count_reset     <= '0';
                 reg_reset       <= '0';
 
@@ -168,7 +169,7 @@ begin
             -- Write_Data_2 is part of a Read/Write loop, it loads a bit into the register for one tick. 
             -- If the dedicated register states it is "ready", write_status leads back to Idle.
             when write_data_2 =>
-                enable          <= '1';
+                enable          <= "100";
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
