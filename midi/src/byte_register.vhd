@@ -24,14 +24,15 @@ begin
         if clear = '0' then
             if rising_edge(clk) then
                 if enable = '1' then
-                    q(0) <= d;
+                    s(0) <= d;
                 end if ;
             end if ;
         else -- if clear = '1' then reset all parameters.
-            q               <= x"00";
+            s               <= x"00";
             shift_amount    <= "000";
             new_ready       <= '0';
             ready           <= '0';
+            q               <= s;
         end if ;
     end process ; -- insert
 
@@ -39,8 +40,8 @@ begin
     shifting : process( enable )
     begin
         if enable = '0' then
-            s               <= std_logic_vector(shift_right(unsigned(q), 1));
-            shift_amount    <= std_logic_vector(to_unsigned(shift_amount) + 1);
+            s               <= std_logic_vector(shift_right(unsigned(s), 1));
+            shift_amount    <= std_logic_vector(to_unsigned(shift_amount) + '1');
             q               <= s;
         end if ;
     end process ; -- shift
