@@ -4,12 +4,12 @@ use IEEE.std_logic_1164.ALL;
 architecture behavioral of input_sel is
 begin
 
-process(amp, A1_Out,	vel) is
+process(amp, A1_Out, vel) is
 begin
 
-	if (vel(6 downto 5) = "10") then
+	if (vel(6 downto 5) = "10") then	--for all states where MSB and the bit after are "10", select amp*2
 		Sel_Out <= "0" & amp & "0";
-	elsif (vel(6 downto 5) = "11") then
+	elsif (vel(6 downto 5) = "11") then	--for all states where MSB and the bit after are "11", select Adder Output (amp*3)
 		Sel_Out <= A1_Out;
 	elsif (vel(5 downto 4) = "10") then
 		Sel_Out <= "0" & amp & "0";

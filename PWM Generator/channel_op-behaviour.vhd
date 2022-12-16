@@ -27,18 +27,18 @@ signal Shift_Out : std_logic_vector(7 downto 0);
 
 begin
 
-	Add: adder_7x7 port map(in1 => "0" & amp,
-				in2 => amp & "0",
-				out1 => A1_Out);
+	Add: adder_7x7 port map(	in1 => "0" & amp, 	--maps in1 to amp (concatenated to 0 for scaling reasons)
+								in2 => amp & "0", 	--maps in2 to amp*2
+								out1 => A1_Out);	
 
-	Sel: input_sel port map(amp => amp,
-				A1_Out => A1_Out,
-				vel => vel,
-				Sel_Out => Sel_Out);
+	Sel: input_sel port map(	amp => amp,			--maps the input adder to the input of the input selector
+								A1_Out => A1_Out,
+								vel => vel,
+								Sel_Out => Sel_Out);
 
-	Shift: var_shift port map(				Sel_Out => Sel_Out,
-					vel => vel,
-					Shift_Out => CH_Out);
+	Shift: var_shift port map(	Sel_Out => Sel_Out,	--maps the input selector to the input of the variable shifter
+								vel => vel,
+								Shift_Out => CH_Out);
 				
 
 

@@ -21,19 +21,19 @@ architecture structural of pwm_math is
 
 begin
 
-	CH1: channel_op port map (amp => CH1_amp,
+	CH1: channel_op port map (amp => CH1_amp, --maps channnel 1 operations to signal CH1_op
 				  vel => CH1_vel,
 				  CH_Out => CH1_op);
-	CH2: channel_op port map (amp => CH2_amp,
+	CH2: channel_op port map (amp => CH2_amp, --maps channnel 2 operations to signal CH2_op
 				  vel => CH2_vel,
 				  CH_Out => CH2_op);
-	CH3: channel_op port map (amp => CH3_amp,
+	CH3: channel_op port map (amp => CH3_amp, --maps channnel 3 operations to signal CH3_op
 				  vel => CH3_vel,
 				  CH_Out => CH3_op);
-	CH4: channel_op port map (amp => CH4_amp,
+	CH4: channel_op port map (amp => CH4_amp, --maps channnel 4 operations to signal CH1_op
 				  vel => CH4_vel,
 				  CH_Out => CH4_op);
-	SUM: channel_adder port map (in1 => CH1_op,
+	SUM: channel_adder port map (in1 => CH1_op, --maps channel operations to be added by the channel adder
 				     in2 => CH2_op,
 				     in3 => CH3_op,
 				     in4 => CH4_op,
