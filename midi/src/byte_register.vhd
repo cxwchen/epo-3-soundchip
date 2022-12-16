@@ -13,7 +13,8 @@ end entity byte_register;
 architecture structural of byte_register is
 
     signal new_ready    : std_logic;
-    --signal q		    : std_logic_vector(7 downto 0);
+    signal shift_amount : std_logic_vector(2 downto 0);
+    signal s            : std_logic_vector(7 downto 0);
 
 begin
 
@@ -23,13 +24,14 @@ begin
         if clear = '0' then
             if rising_edge(clk) then
                 if enable = '1' then
-                    q(0) <= d; -- TODO: Set other indexes
+                    q(0) <= d;
                 end if ;
             end if ;
-        else
-            q           <= x"FF";
-            new_ready   <= '0';
-            ready       <= '0';
+        else -- if clear = '1' then reset all parameters.
+            q               <= x"00";
+            shift_amount    <= "000";
+            new_ready       <= '0';
+            ready           <= '0';
         end if ;
     end process ; -- insert
 
@@ -37,19 +39,20 @@ begin
     shifting : process( enable )
     begin
         if enable = '0' then
-            q <= std_logic_vector(shift_right(unsigned(q), 1));
+            s               <= std_logic_vector(shift_right(unsigned(q), 1));
+            shift_amount    <= std_logic_vector(to_unsigned(shift_amount) + 1);
+            q               <= s;
         end if ;
     end process ; -- shift
 
     -- Turn "ready" signal high when shift register has LSB = 0
-    readying : process( q )
+    readying : process( shift_amount )
     begin
-        if q(7) = '0' then
+        if shift_amount = "111" then
             new_ready <= '1';
         else
             ready <= new_ready;
         end if ;
     end process ; -- ready
-    
     
 end architecture structural;
