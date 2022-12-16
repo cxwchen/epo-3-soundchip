@@ -41,7 +41,7 @@ begin
     begin
         if enable = '0' then
             s               <= std_logic_vector(shift_right(unsigned(s), 1));
-            shift_amount    <= std_logic_vector(unsigned(shift_amount) + 1);
+            shift_amount    <= std_logic_vector(unsigned(shift_amount) + '1');
             q               <= s;
         end if ;
     end process ; -- shift
