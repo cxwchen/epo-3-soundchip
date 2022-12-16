@@ -14,7 +14,7 @@ architecture structural of inputbuffer is
     
     component flipflop is
         port(
-            clk, d       : in std_logic;
+            clk, d      : in std_logic;
             q           : out std_logic
         );
     end component flipflop;
