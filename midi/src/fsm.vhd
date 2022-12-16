@@ -8,7 +8,7 @@ entity fsm is
         count                           : in std_logic_vector(9 downto 0);
         ready                           : in std_logic_vector(2 downto 0);
         count_reset, reg_reset          : out std_logic;
-        enable                          : out std_logic_vector(2 downto 0);
+        enable                          : out std_logic_vector(2 downto 0)
     );
 end entity fsm;
 
