@@ -1,0 +1,6 @@
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+entity mult_adder_tb is
+end mult_adder_tb;
+

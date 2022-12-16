@@ -1,0 +1,37 @@
+library IEEE;
+use IEEE.std_logic_1164.ALL;
+
+architecture behavioral of mult_adder_tb is
+   component mult_adder
+      port(clk      : in  std_logic;
+           amp      : in  std_logic_vector(5 downto 0);
+   	   load_acc	: in  std_logic;
+	   load_shift: in std_logic;
+           vel_in   : in  std_logic;
+           Mult_Out : out std_logic_vector(12 downto 0));
+   end component;
+   signal clk      : std_logic;
+   signal amp      : std_logic_vector(5 downto 0);
+   signal load		   : std_logic;
+   signal vel_in   : std_logic;
+   signal Mult_Out : std_logic_vector(12 downto 0);
+begin
+   test: mult_adder port map (clk, amp, load, vel_in, Mult_Out);
+   clk <= '0' after 0 ns,
+          '1' after 20 ns when clk /= '1' else '0' after 20 ns;
+   amp(0) <= '1' after 0 ns;
+   amp(1) <= '0' after 0 ns;
+   amp(2) <= '1' after 0 ns;
+   amp(3) <= '0' after 0 ns;
+   amp(4) <= '0' after 0 ns;
+   amp(5) <= '1' after 0 ns;
+   load <= '1' after 0 ns,
+		'0' after 60 ns,
+	   	'1' after 340 ns,
+		'0' after 380 ns;
+   vel_in <= '0' after 0 ns,
+		'1' after 60 ns,
+		'0' after 100 ns,
+		'1' after 300 ns;
+end behavioral;
+
