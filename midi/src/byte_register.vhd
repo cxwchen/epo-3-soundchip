@@ -23,8 +23,7 @@ begin
             shift_amount    <= (others => '0');
         elsif (clk'event and clk = '1') then
             if (enable = '1') then
-                s(0)            <= d;
-                s(7 downto 1)   <= s(6 downto 0);
+                s               <= s(6 downto 0) & d;
                 shift_amount    <= std_logic_vector(unsigned(shift_amount) + 1);
             else
                 s               <= s;
