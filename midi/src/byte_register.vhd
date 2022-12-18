@@ -26,6 +26,9 @@ begin
                 s(0)            <= d;
                 s(7 downto 1)   <= s(6 downto 0);
                 shift_amount    <= std_logic_vector(unsigned(shift_amount) + 1);
+            else
+                s               <= s;
+                shift_amount    <= shift_amount;
             end if ;
             
             -- Set ready output signal to high when the shift count reaches 8
