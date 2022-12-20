@@ -21,7 +21,7 @@ architecture behavioural of distributor is
     
 
 begin
-    process(sd_in, clk, reset)
+    process(clk, reset)
     begin
         if (reset = '1') then
             notes           <= (others => '0');

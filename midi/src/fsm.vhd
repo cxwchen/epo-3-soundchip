@@ -17,7 +17,6 @@ architecture behavioural of fsm is
     signal fsm_state, new_fsm_state : fsm_state_type;
 
 begin
-
     process(clk, reset)
     begin
         if (reset = '1') then
