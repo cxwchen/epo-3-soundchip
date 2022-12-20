@@ -8,7 +8,7 @@ entity distributor is
         sd_in                                                               : in std_logic_vector(23 downto 0); -- Input received from the register (connected to q)
         reg_ready                                                           : in std_logic_vector(2 downto 0);  -- Ready signals from register
         note_on                                                             : out std_logic_vector(3 downto 0);
-        velo0, velo1, velo2, velo3, pitch_tg0, pitch_tg1, pitch_tg2         : out std_logic_vector(6 downto 0);
+        velo0, velo1, velo2, velo3, pitch_tg0, pitch_tg1, pitch_tg2         : out std_logic_vector(6 downto 0)
     );
 end entity distributor;
 
@@ -17,7 +17,7 @@ architecture behavioural of distributor is
     -- Internal signals representing outputs.
     signal notes, new_notes             : std_logic_vector(3 downto 0);
     signal pitches, new_pitches         : std_logic_vector(20 downto 0);
-    signal velocity, new_velocities     : std_logic_vector(27 downto 0);
+    signal velocities, new_velocities     : std_logic_vector(27 downto 0);
     
 
 begin
@@ -29,7 +29,7 @@ begin
             pitches         <= (others => '0');
             new_pitches     <= (others => '0');
             velocities      <= (others => '0');
-            new_velicities  <= (others => '0');
+            new_velocities  <= (others => '0');
         elsif (clk'event and clk = '1') then
             -- Update current signal on clock cycle.
             notes       <= new_notes;
@@ -39,7 +39,7 @@ begin
             -- Check if the data is ready to be updated
             if (reg_ready = "111") then
                 if (sd_in(6 downto 4) = "000") then
-                    if ( (sd_in(15 downto 8) <= to_unsigned(48,8)) and (sd_in(15 downto 8) >= to_unsigned(21,8)) ) then -- Check if the input note is in the bass register (C0 - C3).
+                    if ((unsigned(sd_in(15 downto 8)) <= to_unsigned(48,8)) and (unsigned(sd_in(15 downto 8)) >= to_unsigned(21,8))) then -- Check if the input note is in the bass register (C0 - C3)
                         new_pitches(6 downto 0)     <= sd_in(14 downto 8);
                         new_notes(0)                <= '1';
                     elsif ( sd_in(15 downto 8) >= ('0' & pitches(13 downto 7)) ) then -- Check if the new input is a higher pitch than the current note on TG1
