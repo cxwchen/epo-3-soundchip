@@ -30,5 +30,5 @@ begin
         new_count <= count + 1;
     end process ; -- increment
     
-    
+    count_out <= std_logic_vector(count);
 end architecture structural;
