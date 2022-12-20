@@ -16,14 +16,12 @@ architecture structural of counter is
 
 begin
 
-    timebase : process(clk)
+    timebase : process(clk, reset)
 	begin
-        if rising_edge(clk) then
-            if reset = '1' then
-                count <= (others => '0');
-            else
-                count <= new_count;
-            end if;
+        if reset = '1' then
+            count <= (others => '0');
+        elsif rising_edge(clk) then
+            count <= new_count;
         end if;
     end process ; -- timebase
 

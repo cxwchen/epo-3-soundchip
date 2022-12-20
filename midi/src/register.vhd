@@ -4,7 +4,7 @@ use IEEE.numeric_std.all;
 
 entity reg is
     port (
-        clk, reset, loc_reset d, clear  : in std_logic;
+        clk, reset, loc_reset, d        : in std_logic;
         enable                          : in std_logic_vector(2 downto 0);
         q                               : out std_logic_vector(23 downto 0);
         ready                           : out std_logic_vector(2 downto 0)

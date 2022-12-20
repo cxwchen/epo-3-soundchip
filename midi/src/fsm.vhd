@@ -20,12 +20,10 @@ begin
 
     process(clk, reset)
     begin
-        if rising_edge(clk) then
-            if (reset = '1') then
-                fsm_state <= rest;
-            else 
-                fsm_state <= new_fsm_state;
-            end if;
+        if (reset = '1') then
+            fsm_state   <= rest;
+        elsif rising_edge(clk) then
+            fsm_state <= new_fsm_state;
         end if;
     end process;
 
@@ -78,7 +76,7 @@ begin
                         else -- Ignore data byte if there is no status set
                             new_fsm_state   <= rest;
                     	end if;
-		    end if;
+		            end if;
                 else
                     new_fsm_state   <= start;
                 end if;
@@ -142,7 +140,7 @@ begin
                 end if;
             
             -- Write_Data_1 is part of a Read/Write loop, it loads a bit into the register for one tick. 
-            -- If the dedicated register states it is "ready", write_status leads back to Idle.
+            -- If the dedicated register states it is "ready", write_daa_1 leads back to Idle.
             when write_data_1 =>
                 enable          <= "010";
                 count_reset     <= '1';
@@ -167,7 +165,7 @@ begin
                 end if;
         
             -- Write_Data_2 is part of a Read/Write loop, it loads a bit into the register for one tick. 
-            -- If the dedicated register states it is "ready", write_status leads back to Idle.
+            -- If the dedicated register states it is "ready", write_data_2 leads back to Idle.
             when write_data_2 =>
                 enable          <= "100";
                 count_reset     <= '1';
