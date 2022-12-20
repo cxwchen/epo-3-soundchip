@@ -78,6 +78,7 @@ begin
             reset       => reset,
             Din         => s_d_buf,
             count       => s_count,
+            ready       => s_reg_ready,
             count_reset => s_count_reset,
             reg_reset   => s_reg_reset,
             enable      => s_enable
