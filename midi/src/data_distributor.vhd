@@ -8,7 +8,7 @@ entity distributor is
         sd_in                                                               : in std_logic_vector(23 downto 0); -- Input received from the register (connected to q)
         reg_ready                                                           : in std_logic_vector(2 downto 0);  -- Ready signals from register
         note_on                                                             : out std_logic_vector(3 downto 0);
-        velo0, velo1, velo2, velo3, pitch_tg0, pitch_tg1, pitch_tg2         : out std_logic_vector(6 downto 0);
+        velo0, velo1, velo2, velo3, pitch_tg0, pitch_tg1, pitch_tg2         : out std_logic_vector(6 downto 0)
     );
 end entity distributor;
 
