@@ -10,7 +10,7 @@ entity midi_decoder is
         -- Outputs
         note_on                     : out std_logic_vector(3 downto 0); -- Which notes should be on at any given moment in time
         tg_0, tg_1, tg_2            : out std_logic_vector(6 downto 0); -- Pitch per tone generator
-        vel_0, vel_1, vel_2, vel_3  : out std_logic_vector(6 downto 0); -- Velocity per note / tone generator
+        vel_0, vel_1, vel_2, vel_3  : out std_logic_vector(6 downto 0) -- Velocity per note / tone generator
     );
 end entity midi_decoder;
 
@@ -54,7 +54,7 @@ architecture structural of midi_decoder is
             sd_in                                                               : in std_logic_vector(23 downto 0); -- Input received from the register (connected to q)
             reg_ready                                                           : in std_logic_vector(2 downto 0);  -- Ready signals from register
             note_on                                                             : out std_logic_vector(3 downto 0);
-            velo0, velo1, velo2, velo3, pitch_tg0, pitch_tg1, pitch_tg2         : out std_logic_vector(6 downto 0);
+            velo0, velo1, velo2, velo3, pitch_tg0, pitch_tg1, pitch_tg2         : out std_logic_vector(6 downto 0)
         );
     end component distributor;
 
@@ -69,7 +69,7 @@ begin
         port map(
             clk         => clk,
             reset       => reset,
-            count_out   => s_count,
+            count_out   => s_count
         );
     
     pm_fsm: fsm
