@@ -39,7 +39,7 @@ begin
             -- Check if the data is ready to be updated
             if (reg_ready = "111") then
                 if (sd_in(6 downto 4) = "000") then
-                    if ((unsigned(sd_in(15 downto 8)) <= to_unsigned(48,8)) and (unsigned(sd_in(15 downto 0)) >= to_unsigned(21,8))) then -- Check if the input note is in the bass register (C0 - C3)
+                    if ((unsigned(sd_in(15 downto 8)) <= to_unsigned(48,8)) and (unsigned(sd_in(15 downto 8)) >= to_unsigned(21,8))) then -- Check if the input note is in the bass register (C0 - C3)
                         new_pitches(6 downto 0)     <= sd_in(14 downto 8);
                         new_notes(0)                <= '1';
                     elsif ( sd_in(15 downto 8) >= ('0' & pitches(13 downto 7)) ) then -- Check if the new input is a higher pitch than the current note on TG1
