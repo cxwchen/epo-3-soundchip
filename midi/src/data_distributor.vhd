@@ -36,6 +36,7 @@ begin
             pitches     <= new_pitches;
             velocities  <= new_velocities;
 
+            -- TODO: A dedicated noise note/key needs to be chosen
             -- Check if the data is ready to be updated
             if (reg_ready = "111") then
                 if (sd_in(3 downto 1) = "001") then -- "001" means that the status message is a Note On message
