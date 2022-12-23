@@ -13,7 +13,7 @@ entity fsm is
 end entity fsm;
 
 architecture behavioural of fsm is
-    type fsm_state_type is (rest, idle, offset, r_offset, start, init_status, init_data, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
+    type fsm_state_type is (rest, idle, offset, r_offset, start, write_init_bit, init_status, init_data, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
 
     signal fsm_state, new_fsm_state : fsm_state_type;
 
@@ -95,7 +95,7 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '1';
 
-                new_fsm_state   <= read_status;
+                new_fsm_state   <= write_init_bit;
             
             -- Writes the status bit to the register.
             when write_init_bit =>
@@ -127,10 +127,6 @@ begin
                 if (ready(0) = '1') then
                     new_fsm_state <= idle;
                 else 
-                    new_fsm_state <= read_status;
-                end if;
-
-            -- Init_Data resets the counter, then continues to either R_D_1 or R_D_2 based on the ready state(s) of the register.
                     new_fsm_state <= read_status;
                 end if;
             

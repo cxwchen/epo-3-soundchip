@@ -51,6 +51,7 @@ begin
                     '1' after 64 us, -- Status initialised
                     '0' after 96 us,
                     '1' after 160 us,
-                    '0' after 192 us;
+                    '0' after 192 us,
+                    '1' after 320 us;
 
 end behavioural ; -- behavioural
