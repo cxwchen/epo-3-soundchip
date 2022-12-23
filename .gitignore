@@ -1,3 +1,4 @@
 **/*.vhd_
 *.vhd_
 *.bak
+*.vhd.bak
