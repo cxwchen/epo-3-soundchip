@@ -11,7 +11,7 @@ entity byte_register is
 end entity byte_register;
 
 architecture structural of byte_register is
-    signal shift_amount : std_logic_vector(2 downto 0); -- Increment everytime new data is shifted into the register
+    signal shift_amount : std_logic_vector(3 downto 0); -- Increment everytime new data is shifted into the register
     signal s            : std_logic_vector(7 downto 0); -- Local storage signal
 
 begin
@@ -31,7 +31,7 @@ begin
             end if ;
             
             -- Set ready output signal to high when the shift count reaches 8
-            if (shift_amount = "111") then
+            if (shift_amount = "1000") then
                 ready       <= '1';
             else
                 ready       <= '0';

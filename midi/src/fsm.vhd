@@ -112,7 +112,11 @@ begin
                 reg_reset       <= '0';
 
                 if (unsigned(count)>=(to_unsigned(800, 10))) then
-                    new_fsm_state <= write_status;
+                    if( ready(0) = '1' ) then
+                        new_fsm_state <= idle;
+                    else
+                        new_fsm_state <= write_status;
+                    end if;
                 else
                     new_fsm_state <= read_status;
                 end if;
@@ -124,11 +128,7 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (ready(0) = '1') then
-                    new_fsm_state <= idle;
-                else 
-                    new_fsm_state <= read_status;
-                end if;
+                new_fsm_state <= read_status;
             
             when init_data =>
                 enable          <= "000";
