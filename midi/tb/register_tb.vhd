@@ -40,11 +40,12 @@ begin
     -- For testing purposes, a very simple non-realistic signal is going to be deserialized.
 
     clk         <=  '0' after 0 ns,
-                    '1' after 10 ns when clk /= '1' else '0' after 10 ns;
+ 		    '1' after 10 ns when clk /= '1' else '0' after 10 ns;
+
     
     reset       <=  '1' after 0 ns,
                     '0' after 10 ns,    -- Should turn back to 1 after 24 bits have been loaded.
-                    '1' after 600 ns;
+                    '1' after 720 ns;
 
     -- 24-bit signal to load: 1111 1111 0000 0011 0011 1110
     -- Sampling occurs on "odd" increments t=10, t=30 ... etc.
@@ -62,19 +63,44 @@ begin
                     '1' after 380 ns,
                     '0' after 480 ns;
     
-    enable(0)   <=  '0' after 0 ns,
-                    '1' after 9 ns, 
-                    '0' after 19 ns when enable(0) /= '0' else '1' after 20 ns,
-                    '0' after 160 ns;
-    enable(1)   <=  '0' after 0 ns,
+    enable(0)   <=  '0' after 0 ns,		
+                    '1' after 9 ns,
+                    '0' after 29 ns,
+                    '1' after 49 ns,
+                    '0' after 69 ns,
+                    '1' after 89 ns,
+                    '0' after 109 ns,
+                    '1' after 129 ns,
+                    '0' after 149 ns,
                     '1' after 169 ns,
-                    '0' after 179 ns when enable(1) /= '0' else '1' after 20 ns,
-                    '0' after 320 ns;
-    enable(2)   <=  '0' after 0 ns,
+                    '0' after 189 ns,
+                    '0' after 209 ns,
+                    '1' after 229 ns,
+                    '0' after 249 ns,
+                    '1' after 269 ns,
+                    '0' after 289 ns;
+    enable(1)   <=  '0' after 0 ns,	--super efficient maar het werkt
                     '1' after 329 ns,
-                    '0' after 339 ns when enable(2) /= '0' else '1' after 20 ns,
-                    '0' after 480 ns;
-
+                    '0' after 349 ns,
+                    '1' after 369 ns,
+                    '0' after 389 ns,
+                    '1' after 409 ns,
+                    '0' after 429 ns,
+                    '1' after 449 ns,
+                    '0' after 469 ns,
+                    '1' after 489 ns,
+                    '0' after 509 ns,
+                    '1' after 529 ns,
+                    '0' after 549 ns;
+    enable(2)   <=  '0' after 0 ns,
+                    '1' after 569 ns,
+                    '0' after 589 ns,
+                    '1' after 609 ns,
+                    '0' after 629 ns,
+                    '1' after 649 ns,
+                    '0' after 669 ns,
+                    '1' after 689 ns,
+                    '0' after 709 ns;
                     
 
 end behavioural ; -- behavioural
