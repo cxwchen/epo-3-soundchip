@@ -13,7 +13,8 @@ entity fsm is
 end entity fsm;
 
 architecture behavioural of fsm is
-    type fsm_state_type is (rest, idle, offset, start, init_status, init_data, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
+    type fsm_state_type is (rest, idle, offset, r_offset, start, init_status, init_data, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
+
     signal fsm_state, new_fsm_state : fsm_state_type;
 
 begin
@@ -55,10 +56,18 @@ begin
                 reg_reset       <= '0';
 
                 if (unsigned(count)>=to_unsigned(400,10)) then
-                    new_fsm_state   <= start;
+                    new_fsm_state   <= r_offset;
                 else
                     new_fsm_state   <= offset;
                 end if;
+            
+            -- Reset the counter before going to start.
+            when r_offset =>
+                enable          <= "000";
+                count_reset     <= '1';
+                reg_reset       <= '0';
+
+                new_fsm_state   <= start;
 
             -- Start counts to 800, next state is based off of which registers are ready.
             when start =>
@@ -80,6 +89,7 @@ begin
                     new_fsm_state   <= start;
                 end if;
             
+            -- Reset the counter and register before reading off the status.
             when init_status =>
                 enable          <= "000";
                 count_reset     <= '1';
@@ -87,6 +97,14 @@ begin
 
                 new_fsm_state   <= read_status;
             
+            -- Writes the status bit to the register.
+            when write_init_bit =>
+                enable          <= "001";
+                count_reset     <= '1';
+                reg_reset       <= '0';
+
+                new_fsm_state   <= read_status;
+
             -- Read_Status is part of a Read/Write loop that should occur 8 times total.
             when read_status =>   
                 enable          <= "000";
@@ -113,6 +131,9 @@ begin
                 end if;
 
             -- Init_Data resets the counter, then continues to either R_D_1 or R_D_2 based on the ready state(s) of the register.
+                    new_fsm_state <= read_status;
+                end if;
+            
             when init_data =>
                 enable          <= "000";
                 count_reset     <= '1';

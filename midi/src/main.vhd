@@ -17,8 +17,8 @@ end entity midi_decoder;
 architecture structural of midi_decoder is
     component counter is
         port (
-            clk, reset          : in std_logic;
-            count_out           : out std_logic_vector(9 downto 0)
+            clk, reset, loc_reset       : in std_logic;
+            count_out                   : out std_logic_vector(9 downto 0)
         );
     end component counter;
     
@@ -69,6 +69,7 @@ begin
         port map(
             clk         => clk,
             reset       => reset,
+            loc_reset   => s_count_reset,
             count_out   => s_count
         );
     
