@@ -8,22 +8,24 @@ entity fsm is
         count                           : in std_logic_vector(9 downto 0);
         ready                           : in std_logic_vector(2 downto 0);
         count_reset, reg_reset          : out std_logic;
-        enable                          : out std_logic_vector(2 downto 0)
+        enable                          : out std_logic_vector(2 downto 0);
     );
 end entity fsm;
 
 architecture behavioural of fsm is
-    type fsm_state_type is (rest, idle, offset, r_offset, start, init_status, init_data, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
-
+    type fsm_state_type is (rest, idle, offset, start, init_status, init_data, read_status, read_data_1, read_data_2, write_status, write_data_1, write_data_2);
     signal fsm_state, new_fsm_state : fsm_state_type;
 
 begin
+
     process(clk, reset)
     begin
-        if (reset = '1') then
-            fsm_state   <= rest;
-        elsif rising_edge(clk) then
-            fsm_state <= new_fsm_state;
+        if rising_edge(clk) then
+            if (reset = '1') then
+                fsm_state <= rest;
+            else 
+                fsm_state <= new_fsm_state;
+            end if;
         end if;
     end process;
 
@@ -56,18 +58,10 @@ begin
                 reg_reset       <= '0';
 
                 if (unsigned(count)>=to_unsigned(400,10)) then
-                    new_fsm_state   <= r_offset;
+                    new_fsm_state   <= start;
                 else
                     new_fsm_state   <= offset;
                 end if;
-            
-            -- Reset the counter before going to start.
-            when r_offset =>
-                enable          <= "000";
-                count_reset     <= '1';
-                reg_reset       <= '0';
-
-                new_fsm_state   <= start;
 
             -- Start counts to 800, next state is based off of which registers are ready.
             when start =>
@@ -84,12 +78,11 @@ begin
                         else -- Ignore data byte if there is no status set
                             new_fsm_state   <= rest;
                     	end if;
-		            end if;
+		    end if;
                 else
                     new_fsm_state   <= start;
                 end if;
             
-            -- Reset the counter and register before reading off the status.
             when init_status =>
                 enable          <= "000";
                 count_reset     <= '1';
@@ -97,14 +90,6 @@ begin
 
                 new_fsm_state   <= read_status;
             
-            -- Writes the status bit to the register.
-            when write_init_bit =>
-                enable          <= "001";
-                count_reset     <= '1';
-                reg_reset       <= '0';
-
-                new_fsm_state   <= read_status;
-
             -- Read_Status is part of a Read/Write loop that should occur 8 times total.
             when read_status =>   
                 enable          <= "000";
@@ -131,9 +116,6 @@ begin
                 end if;
 
             -- Init_Data resets the counter, then continues to either R_D_1 or R_D_2 based on the ready state(s) of the register.
-                    new_fsm_state <= read_status;
-                end if;
-            
             when init_data =>
                 enable          <= "000";
                 count_reset     <= '1';
@@ -160,7 +142,7 @@ begin
                 end if;
             
             -- Write_Data_1 is part of a Read/Write loop, it loads a bit into the register for one tick. 
-            -- If the dedicated register states it is "ready", write_daa_1 leads back to Idle.
+            -- If the dedicated register states it is "ready", write_status leads back to Idle.
             when write_data_1 =>
                 enable          <= "010";
                 count_reset     <= '1';
@@ -185,7 +167,7 @@ begin
                 end if;
         
             -- Write_Data_2 is part of a Read/Write loop, it loads a bit into the register for one tick. 
-            -- If the dedicated register states it is "ready", write_data_2 leads back to Idle.
+            -- If the dedicated register states it is "ready", write_status leads back to Idle.
             when write_data_2 =>
                 enable          <= "100";
                 count_reset     <= '1';
