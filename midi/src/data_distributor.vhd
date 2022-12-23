@@ -39,21 +39,30 @@ begin
             -- TODO: A dedicated noise note/key needs to be chosen
             -- Check if the data is ready to be updated
             if (reg_ready = "111") then
-                if (sd_in(3 downto 1) = "001") then -- "001" means that the status message is a Note On message
-                    if ((unsigned(sd_in(15 downto 8)) <= to_unsigned(48,8)) and (unsigned(sd_in(15 downto 8)) >= to_unsigned(21,8))) then -- Check if the input note is in the bass register (C0 - C3)
-                        new_pitches(6 downto 0)     <= sd_in(15 downto 9);
+                if (sd_in(22 downto 20) = "001") then -- "001" means that the status message is a Note On message
+                    if ((unsigned(sd_in(14 downto 8)) <= to_unsigned(48,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(21,7))) then -- Check if the input note is in the bass register (C0 - C3)
+                        new_pitches(6 downto 0)     <= sd_in(14 downto 8);
                         new_notes(0)                <= '1';
-                        new_velocities(6 downto 0)  <= sd_in(23 downto 17);
-                    elsif ( sd_in(15 downto 8) >= ('0' & pitches(13 downto 7)) ) then -- Check if the new input is a higher pitch than the current note on TG1
-                        new_pitches(20 downto 14)       <= sd_in(15 downto 9);
+                        new_velocities(6 downto 0)  <= sd_in(6 downto 0);
+                    elsif((unsigned(sd_in(14 downto 8)) <= to_unsigned(108,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(81,7))) then -- High
+                        new_pitches(20 downto 14)       <= sd_in(14 downto 8);
                         new_notes(2)                    <= '1';
-                        new_velocities(20 downto 14)    <= sd_in(23 downto 17);
-                    else
-                        new_pitches(13 downto 7)    <= sd_in(15 downto 9); -- If the pitch isnt the current highest or a bass note, route it to TG1
+                        new_velocities(20 downto 14)    <= sd_in(6 downto 0);
+                    else -- Mid
+                        new_pitches(13 downto 7)    <= sd_in(14 downto 8);
                         new_notes(1)                <= '1';
-                        new_velocities(13 downto 7) <= sd_in(23 downto 17);
+                        new_velocities(13 downto 7) <= sd_in(6 downto 0);
+
+                    -- elsif ( sd_in(14 downto 8) >= ('0' & pitches(13 downto 7)) ) then -- Check if the new input is a higher pitch than the current note on TG1
+                    --     new_pitches(20 downto 14)       <= sd_in(14 downto 8);
+                    --     new_notes(2)                    <= '1';
+                    --     new_velocities(20 downto 14)    <= sd_in(6 downto 0);
+                    -- else
+                    --     new_pitches(13 downto 7)    <= sd_in(14 downto 8); -- If the pitch isnt the current highest or a bass note, route it to TG1
+                    --     new_notes(1)                <= '1';
+                    --     new_velocities(13 downto 7) <= sd_in(6 downto 0);
                     end if;
-                elsif (sd_in(3 downto 1) = "000") then -- "000" means that the status message is a Note off message
+                elsif (sd_in(22 downto 20) = "000") then -- "000" means that the status message is a Note off message
                     if (sd_in(15 downto 8) = ('0' & pitches(6 downto 0)) ) then
                         -- new_pitches(6 downto 0) <= (others => '0');
                         new_notes(0)    <= '0';
