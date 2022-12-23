@@ -34,7 +34,7 @@ begin
 
 			else
 -- a register of with two flip flops will be used, therefore the flip flop needs to be able to shift when count = 1 also, besides count = 0.
-				if(s_pwm_high = '1' and to_integer(unsigned(s_cnt)) < 2) then
+				if(to_integer(unsigned(s_cnt)) = 0) then
 
 					ff_out <= ff_in;
 					
