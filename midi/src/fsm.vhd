@@ -150,7 +150,11 @@ begin
                 reg_reset       <= '0';
 
                 if (unsigned(count)>=(to_unsigned(800, 10))) then
-                    new_fsm_state <= write_data_1;
+                    if( ready(1) = '1' ) then
+                        new_fsm_state <= idle;
+                    else
+                        new_fsm_state <= write_data_1;
+                    end if;
                 else
                     new_fsm_state <= read_data_1;
                 end if;
@@ -162,11 +166,7 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (ready(1) = '1') then
-                    new_fsm_state <= idle;
-                else 
-                    new_fsm_state <= read_data_1;
-                end if;
+                new_fsm_state <= read_data_1;
 
             -- Read_Data_2 is part of a Read/Write loop that should occur 8 times total.
             when read_data_2 =>   
@@ -175,7 +175,11 @@ begin
                 reg_reset       <= '0';
 
                 if (unsigned(count)>=(to_unsigned(800, 10))) then
-                    new_fsm_state <= write_data_2;
+                    if( ready(2) = '1' ) then
+                        new_fsm_state <= idle;
+                    else
+                        new_fsm_state <= write_data_2;
+                    end if;
                 else
                     new_fsm_state <= read_data_2;
                 end if;
@@ -186,12 +190,8 @@ begin
                 enable          <= "100";
                 count_reset     <= '1';
                 reg_reset       <= '0';
-
-                if (ready(2) = '1') then
-                    new_fsm_state <= idle;
-                else 
-                    new_fsm_state <= read_data_2;
-                end if;              
+                
+                new_fsm_state   <= read_data_2;
         end case;
     end process;
 end architecture behavioural;

@@ -50,7 +50,7 @@ architecture structural of midi_decoder is
 
     component distributor is
         port (
-            clk, reset                                                          : in std_logic;
+            clk, reset, loc_reset                                               : in std_logic;
             sd_in                                                               : in std_logic_vector(23 downto 0); -- Input received from the register (connected to q)
             reg_ready                                                           : in std_logic_vector(2 downto 0);  -- Ready signals from register
             note_on                                                             : out std_logic_vector(3 downto 0);
@@ -107,6 +107,7 @@ begin
         port map(
             clk         => clk,
             reset       => reset,
+            loc_reset   => reset,
             sd_in       => s_data,
             reg_ready   => s_reg_ready,
             note_on     => note_on,

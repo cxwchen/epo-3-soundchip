@@ -4,7 +4,7 @@ use IEEE.numeric_std.all;
 
 entity distributor is
     port (
-        clk, reset                                                          : in std_logic;
+        clk, reset, loc_reset                                               : in std_logic;
         sd_in                                                               : in std_logic_vector(23 downto 0); -- Input received from the register (connected to q)
         reg_ready                                                           : in std_logic_vector(2 downto 0);  -- Ready signals from register
         note_on                                                             : out std_logic_vector(3 downto 0);
@@ -23,7 +23,7 @@ architecture behavioural of distributor is
 begin
     process(clk, reset)
     begin
-        if (reset = '1') then
+        if (reset = '1' or loc_reset = '1') then
             notes           <= (others => '0');
             new_notes       <= (others => '0');
             pitches         <= (others => '0');
@@ -35,23 +35,22 @@ begin
             notes       <= new_notes;
             pitches     <= new_pitches;
             velocities  <= new_velocities;
-
             -- TODO: A dedicated noise note/key needs to be chosen
             -- Check if the data is ready to be updated
             if (reg_ready = "111") then
-                if (sd_in(22 downto 20) = "001") then -- "001" means that the status message is a Note On message
+                if (sd_in(6 downto 4) = "001") then -- "001" means that the status message is a Note On message
                     if ((unsigned(sd_in(14 downto 8)) <= to_unsigned(48,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(21,7))) then -- Check if the input note is in the bass register (C0 - C3)
                         new_pitches(6 downto 0)     <= sd_in(14 downto 8);
                         new_notes(0)                <= '1';
-                        new_velocities(6 downto 0)  <= sd_in(6 downto 0);
+                        new_velocities(6 downto 0)  <= sd_in(23 downto 16);
                     elsif((unsigned(sd_in(14 downto 8)) <= to_unsigned(108,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(81,7))) then -- High
                         new_pitches(20 downto 14)       <= sd_in(14 downto 8);
                         new_notes(2)                    <= '1';
-                        new_velocities(20 downto 14)    <= sd_in(6 downto 0);
+                        new_velocities(20 downto 14)    <= sd_in(23 downto 16);
                     else -- Mid
                         new_pitches(13 downto 7)    <= sd_in(14 downto 8);
                         new_notes(1)                <= '1';
-                        new_velocities(13 downto 7) <= sd_in(6 downto 0);
+                        new_velocities(13 downto 7) <= sd_in(21 downto 15);
 
                     -- elsif ( sd_in(14 downto 8) >= ('0' & pitches(13 downto 7)) ) then -- Check if the new input is a higher pitch than the current note on TG1
                     --     new_pitches(20 downto 14)       <= sd_in(14 downto 8);

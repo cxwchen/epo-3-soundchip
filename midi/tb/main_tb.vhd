@@ -52,6 +52,17 @@ begin
                     '0' after 96 us,
                     '1' after 160 us,
                     '0' after 192 us,
-                    '1' after 320 us;
+                    '1' after 320 us,
+                    '0' after 640 us, -- Start of Data1-bit
+                    '1' after 800 us, 
+                    '0' after 832 us,
+                    '1' after 960 us,
+                    '0' after 1100 us,
+                    '1' after 1228 us,
+                    '0' after 1260 us,
+                    '1' after 1420 us;
+
+
+
 
 end behavioural ; -- behavioural
