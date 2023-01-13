@@ -32,21 +32,13 @@ begin
 		if(clk'event and clk = '1') then
 
 			if(reset = '1') then
-
 				state_current <= state_reset;
-
 			else
-
 				state_current <= state_next;
-
 			end if;
-		
-			
 
 		else
-
 			null;
-
 		end if;
 
   end process; 
@@ -58,18 +50,10 @@ begin
       when state_reset =>
 
         pwm_out <= '0';
+		
+	if(to_integer(unsigned(s_counter)) = 0) then
 
-        if(reset = '0') then
-
-					if(to_integer(unsigned(s_counter)) = to_unsigned(0, 8)) then
-
-						state_next <= state_high;
-
-					else
-					
-						null;
-	
-					end if;
+		state_next <= state_high;
 
         else
 
