@@ -50,7 +50,7 @@ begin
                     else -- Mid
                         new_pitches(13 downto 7)    <= sd_in(14 downto 8);
                         new_notes(1)                <= '1';
-                        new_velocities(13 downto 7) <= sd_in(21 downto 15);
+                        new_velocities(13 downto 7) <= sd_in(22 downto 16);
 
                     -- elsif ( sd_in(14 downto 8) >= ('0' & pitches(13 downto 7)) ) then -- Check if the new input is a higher pitch than the current note on TG1
                     --     new_pitches(20 downto 14)       <= sd_in(14 downto 8);
