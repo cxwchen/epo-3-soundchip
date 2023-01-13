@@ -3,8 +3,8 @@ use IEEE.std_logic_1164.ALL;
 
 entity pwm_structural is
    port(clk, reset : in  std_logic;
-				duty : in std_logic_vector(7 downto 0);
-				pout : out std_logic);
+	duty : in std_logic_vector(7 downto 0);
+	pout : out std_logic);
 end pwm_structural;
 
 architecture structural of pwm_structural is

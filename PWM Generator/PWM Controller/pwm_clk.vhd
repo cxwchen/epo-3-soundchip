@@ -25,7 +25,7 @@ begin
 			
       else
         
-        counter <= std_logic_vector(unsigned(counter) + to_unsigned(1, 8));
+        counter <= std_logic_vector(unsigned(counter) + 1); --adds 1 to the counter
 
         if(to_integer(unsigned(counter)) < 95) then
 
