@@ -33,7 +33,7 @@ begin
 				ff_out <= std_logic_vector(to_unsigned(0, 8));
 
 			else
--- a register of with two flip flops will be used, therefore the flip flop needs to be able to shift when count = 1 also, besides count = 0.
+				
 				if(to_integer(unsigned(s_cnt)) = 0) then
 
 					ff_out <= ff_in;
