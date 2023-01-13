@@ -42,11 +42,11 @@ begin
                     if ((unsigned(sd_in(14 downto 8)) <= to_unsigned(48,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(21,7))) then -- Check if the input note is in the bass register (C0 - C3)
                         new_pitches(6 downto 0)     <= sd_in(14 downto 8);
                         new_notes(0)                <= '1';
-                        new_velocities(6 downto 0)  <= sd_in(23 downto 16);
+                        new_velocities(6 downto 0)  <= sd_in(22 downto 16);
                     elsif((unsigned(sd_in(14 downto 8)) <= to_unsigned(108,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(81,7))) then -- High
                         new_pitches(20 downto 14)       <= sd_in(14 downto 8);
                         new_notes(2)                    <= '1';
-                        new_velocities(20 downto 14)    <= sd_in(23 downto 16);
+                        new_velocities(20 downto 14)    <= sd_in(22 downto 16);
                     else -- Mid
                         new_pitches(13 downto 7)    <= sd_in(14 downto 8);
                         new_notes(1)                <= '1';
