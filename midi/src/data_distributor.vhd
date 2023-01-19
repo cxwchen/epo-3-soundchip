@@ -45,7 +45,7 @@ begin
             if (sd_in(6 downto 4) = "001") then 
                 if ((unsigned(sd_in(14 downto 8)) <= to_unsigned(48,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(22, 7))) then -- Bass register
                     new_pitches(6 downto 0) <= sd_in(14 downto 8);
-                    new_pitches(27 downto 7) <= pitches(27 downto 21);
+                    new_pitches(27 downto 7) <= pitches(27 downto 7);
 
                     new_notes(3 downto 1) <= notes(3 downto 1);
                     new_notes(0) <= '1';
@@ -63,7 +63,7 @@ begin
 
                     new_velocities(13 downto 0) <= velocities(13 downto 0);
                     new_velocities(20 downto 14) <= sd_in(22 downto 16);
-                    new_velocities(27 downto 21) <= velocities(20 downto 21);
+                    new_velocities(27 downto 21) <= velocities(27 downto 21);
                 elsif ((unsigned(sd_in(14 downto 8)) = to_unsigned(108, 7)) or (unsigned(sd_in(14 downto 8)) = to_unsigned(21,7))) then -- note numbers 108 and 21 will be noise
                     new_pitches(27 downto 21) <= sd_in(14 downto 8);
                     new_pitches(20 downto 0) <= pitches(20 downto 0);
