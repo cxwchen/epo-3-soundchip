@@ -11,33 +11,43 @@ entity byte_register is
 end entity byte_register;
 
 architecture structural of byte_register is
-    signal shift_amount : std_logic_vector(3 downto 0); -- Increment everytime new data is shifted into the register
-    signal s            : std_logic_vector(7 downto 0); -- Local storage signal
+    signal htshift, ftshift : std_logic_vector(3 downto 0); -- Increment everytime new data is shifted into the register
+    signal hts, fts            : std_logic_vector(7 downto 0); -- Local storage signal
 
 begin
-    beh : process( clk, reset, loc_reset )
+    beh : process(clk)
     begin
-        if (reset = '1' or loc_reset = '1') then
-            s               <= (others => '0');
-            ready           <= '0';
-            shift_amount    <= (others => '0');
-        elsif (clk'event and clk = '1') then
-            if (enable = '1') then
-                s               <= s(6 downto 0) & d;
-                shift_amount    <= std_logic_vector(unsigned(shift_amount) + 1);
+        if(rising_edge(clk)) then
+            if (reset = '1' or loc_reset = '1') then
+                hts               <= (others => '0');
+                htshift    <= (others => '0');
             else
-                s               <= s;
-                shift_amount    <= shift_amount;
-            end if ;
+                hts <= fts;
+                htshift <= ftshift;
+            end if;
+        end if;
+    end process;
+
+    process(hts, htshift, d, enable)
+    begin
+        if (enable = '1') then
+            fts         <= hts(6 downto 0) & d;
+            ftshift     <= std_logic_vector(unsigned(htshift) + 1);
+        else
+            fts        <= hts;
+            ftshift    <= htshift;
+        end if ;
             
             -- Set ready output signal to high when the shift count reaches 8
-            if (shift_amount = "1000") then
-                ready       <= '1';
-            else
-                ready       <= '0';
-            end if;
+        if (htshift = "1000") then
+            ready       <= '1';
+        else
+            ready       <= '0';
         end if;
     end process ; -- Main behaviour
 
-    q   <= s;
+    process(hts)
+    begin
+        q   <= hts;
+    end process;
 end architecture structural;

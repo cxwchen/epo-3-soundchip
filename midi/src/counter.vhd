@@ -17,17 +17,22 @@ architecture structural of counter is
 begin
     timebase : process(clk, reset)
 	begin
-        if ( reset = '1' or loc_reset = '1' ) then
-            count <= (others => '0');
-        elsif rising_edge(clk) then
-            count <= new_count;
+        if (rising_edge(clk)) then
+            if ( reset = '1' or loc_reset = '1' ) then
+                count <= (others => '0');
+            else
+                count <= new_count;
+            end if;
         end if;
     end process ; -- timebase
 
-    increment : process( count, new_count )
+    increment : process(count)
     begin
         new_count <= count + 1;
     end process ; -- increment
     
-    count_out <= std_logic_vector(count);
+    process(count)
+    begin
+        count_out <= std_logic_vector(count);
+    end process;
 end architecture structural;
