@@ -43,10 +43,10 @@ begin
                 count_reset     <= '1';
                 reg_reset       <= '0';
 
-                if (Din = '1') then
-                    new_fsm_state <= idle;
-                elsif (Din = '0') then
+                if (Din = '0') then
                     new_fsm_state <= offset;
+                else
+                    new_fsm_state <= idle;
                 end if;
             
             -- Offset counts to 400 (ticks) to offset the data sampling by half a period (T = 800 ticks).
