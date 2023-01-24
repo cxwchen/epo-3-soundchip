@@ -136,9 +136,9 @@ begin
                 reg_reset       <= '0';
 
                 if (ready = "001") then
-                    new_fsm_state   <= read_data_1;
+                    new_fsm_state   <= write_data_1;
                 elsif(ready = "011") then
-                    new_fsm_state   <= read_data_2;
+                    new_fsm_state   <= write_data_2;
                 else -- Error
                     new_fsm_state   <= rest;
                 end if;
