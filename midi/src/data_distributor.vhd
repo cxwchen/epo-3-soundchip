@@ -64,7 +64,7 @@ begin
                     new_velocities(13 downto 0) <= velocities(13 downto 0);
                     new_velocities(20 downto 14) <= sd_in(22 downto 16);
                     new_velocities(27 downto 21) <= velocities(27 downto 21);
-                elsif ((unsigned(sd_in(14 downto 8)) = to_unsigned(108, 7)) or (unsigned(sd_in(14 downto 8)) = to_unsigned(21,7))) then -- note numbers 108 and 21 will be noise
+                elsif ((unsigned(sd_in(14 downto 8)) >= to_unsigned(108, 7)) or (unsigned(sd_in(14 downto 8)) <= to_unsigned(21,7))) then -- note numbers 108 and above and 21 and below will be noise
                     new_pitches(27 downto 21) <= sd_in(14 downto 8);
                     new_pitches(20 downto 0) <= pitches(20 downto 0);
 
