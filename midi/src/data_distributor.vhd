@@ -43,7 +43,7 @@ begin
     begin
         if (reg_ready = "111") then
             if (sd_in(6 downto 4) = "001") then 
-                if ((unsigned(sd_in(14 downto 8)) <= to_unsigned(48,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(22, 7))) then -- Bass register
+                if ((unsigned(sd_in(14 downto 8)) <= to_unsigned(52,7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(32, 7))) then -- Bass register
                     new_pitches(6 downto 0) <= sd_in(14 downto 8);
                     new_pitches(27 downto 7) <= pitches(27 downto 7);
 
@@ -52,7 +52,7 @@ begin
 
                     new_velocities(6 downto 0) <= sd_in(22 downto 16);
                     new_velocities(27 downto 7) <= velocities(27 downto 7);
-                elsif((unsigned(sd_in(14 downto 8)) <= to_unsigned(107, 7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(81,7))) then -- High register
+                elsif((unsigned(sd_in(14 downto 8)) <= to_unsigned(95, 7)) and (unsigned(sd_in(14 downto 8)) >= to_unsigned(75,7))) then -- High register
                     new_pitches(13 downto 0) <= pitches(13 downto 0);
                     new_pitches(20 downto 14) <= sd_in(14 downto 8);
                     new_pitches(27 downto 21) <= pitches(27 downto 21);
@@ -64,7 +64,7 @@ begin
                     new_velocities(13 downto 0) <= velocities(13 downto 0);
                     new_velocities(20 downto 14) <= sd_in(22 downto 16);
                     new_velocities(27 downto 21) <= velocities(27 downto 21);
-                elsif ((unsigned(sd_in(14 downto 8)) >= to_unsigned(108, 7)) or (unsigned(sd_in(14 downto 8)) <= to_unsigned(21,7))) then -- note numbers 108 and above and 21 and below will be noise
+                elsif ((unsigned(sd_in(14 downto 8)) >= to_unsigned(96, 7)) or (unsigned(sd_in(14 downto 8)) <= to_unsigned(31,7))) then -- note numbers 108 and above and 21 and below will be noise
                     new_pitches(27 downto 21) <= sd_in(14 downto 8);
                     new_pitches(20 downto 0) <= pitches(20 downto 0);
 
